@@ -72,20 +72,21 @@ namespace ET
                             RuntimeApi.LoadMetadataForAOTAssembly(textAsset.bytes, HomologousImageMode.SuperSet);
                         }
                     }
-                }
+                } // 如果在编辑器模式下，从文件中读取程序集的字节
                 else
                 {
                     assBytes = File.ReadAllBytes(Path.Combine(Define.CodeDir, "Model.dll.bytes"));
                     pdbBytes = File.ReadAllBytes(Path.Combine(Define.CodeDir, "Model.pdb.bytes"));
                 }
 
+                // 加载程序集
                 this.assembly = Assembly.Load(assBytes, pdbBytes);
-
+                // 加载Hotfix程序集
                 Assembly hotfixAssembly = this.LoadHotfix();
-
+                // 将程序集添加到单例中
                 World.Instance.AddSingleton<CodeTypes, Assembly[]>(new[] { typeof(World).Assembly, typeof(Init).Assembly, this.assembly, hotfixAssembly });
             }
-
+            // 运行程序集中的方法
             IStaticMethod start = new StaticMethod(this.assembly, "ET.Entry", "Start");
             start.Run();
         }
@@ -108,15 +109,17 @@ namespace ET
                 assBytes = File.ReadAllBytes(Path.Combine(Define.CodeDir, "Hotfix.dll.bytes"));
                 pdbBytes = File.ReadAllBytes(Path.Combine(Define.CodeDir, "Hotfix.pdb.bytes"));
             }
-
+            // 加载Hotfix程序集
             Assembly hotfixAssembly = Assembly.Load(assBytes, pdbBytes);
             return hotfixAssembly;
         }
 
         public void Reload()
         {
+            // 重新加载Hotfix程序集
             Assembly hotfixAssembly = this.LoadHotfix();
 
+            // 将程序集添加到单例中，并创建代码
             CodeTypes codeTypes = World.Instance.AddSingleton<CodeTypes, Assembly[]>(new[] { typeof(World).Assembly, typeof(Init).Assembly, this.assembly, hotfixAssembly });
             codeTypes.CreateCode();
 

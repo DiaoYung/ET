@@ -1,0 +1,3 @@
+[submodule "Unity/Assets/Scripts/ThirdParty/YooAsset"]
+	path = Unity/Assets/Scripts/ThirdParty/YooAsset
+	url = https://github.com/tuyoogame/YooAsset.git

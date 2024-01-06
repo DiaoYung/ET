@@ -32,51 +32,63 @@ namespace ET.Client
             self.Info = httpGetRouterResponse;
             Log.Debug($"start get router info finish: {MongoHelper.ToJson(httpGetRouterResponse)}");
             
-            // 打乱顺序
+            // 打乱路由器地址的顺序
             RandomGenerator.BreakRank(self.Info.Routers);
-            
+            // 等待10分钟后再次获取所有路由器地址
             self.WaitTenMinGetAllRouter().Coroutine();
         }
         
-        // 等10分钟再获取一次
+        // 这个方法会等待10分钟后再次获取所有路由器地址
         public static async ETTask WaitTenMinGetAllRouter(this RouterAddressComponent self)
         {
-            await self.Root().GetComponent<TimerComponent>().WaitAsync(5 * 60 * 1000);
+            // 等待5分钟
+            await self.Root().GetComponent<TimerComponent>().WaitAsync(10 * 60 * 1000);
+            // 如果组件已经被销毁，则直接返回
             if (self.IsDisposed)
             {
                 return;
             }
+            // 获取所有路由器地址
             await self.GetAllRouter();
         }
 
+        // 这个方法用于获取路由器地址
         public static IPEndPoint GetAddress(this RouterAddressComponent self)
         {
+            // 如果没有路由器地址，则返回null
             if (self.Info.Routers.Count == 0)
             {
                 return null;
             }
-
+            // 获取路由器地址，并打印日志
             string address = self.Info.Routers[self.RouterIndex++ % self.Info.Routers.Count];
             Log.Info($"get router address: {self.RouterIndex - 1} {address}");
             string[] ss = address.Split(':');
+            // 如果是IPv6地址，则转换为IPv6格式
             IPAddress ipAddress = IPAddress.Parse(ss[0]);
             if (self.RouterManagerIPAddress.AddressFamily == AddressFamily.InterNetworkV6)
             { 
                 ipAddress = ipAddress.MapToIPv6();
             }
+            // 返回IP端点
             return new IPEndPoint(ipAddress, int.Parse(ss[1]));
         }
         
+        // 这个方法用于获取Realm地址
         public static IPEndPoint GetRealmAddress(this RouterAddressComponent self, string account)
         {
+            // 根据账号计算Realm地址的索引
             int v = account.Mode(self.Info.Realms.Count);
+            // 获取Realm地址
             string address = self.Info.Realms[v];
+            // 解析IP地址和端口
             string[] ss = address.Split(':');
             IPAddress ipAddress = IPAddress.Parse(ss[0]);
             //if (self.IPAddress.AddressFamily == AddressFamily.InterNetworkV6)
             //{ 
             //    ipAddress = ipAddress.MapToIPv6();
             //}
+            // 返回IP端点
             return new IPEndPoint(ipAddress, int.Parse(ss[1]));
         }
     }
