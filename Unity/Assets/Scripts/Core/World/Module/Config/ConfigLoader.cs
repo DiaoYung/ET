@@ -10,10 +10,17 @@ namespace ET
     /// </summary>
     public class ConfigLoader: Singleton<ConfigLoader>, ISingletonAwake
     {
+	    /// <summary>
+	    /// 获取所有配置的字节消息
+	    /// </summary>
         public struct GetAllConfigBytes
         {
         }
         
+	    
+	    /// <summary>
+	    /// 获取单个配置的字节消息
+	    /// </summary>
         public struct GetOneConfigBytes
         {
             public string ConfigName;

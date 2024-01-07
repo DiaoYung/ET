@@ -25,7 +25,7 @@ namespace ET
         /// <summary>
         /// 请不要随便使用ETTask的对象池，除非你完全搞懂了ETTask!!!
         /// 假如开启了池,await之后不能再操作ETTask，否则可能操作到再次从池中分配出来的ETTask，产生灾难性的后果
-        /// SetResult的时候请现将tcs置空，避免多次对同一个ETTask SetResult
+        /// SetResult的时候请先将tcs置空，避免多次对同一个ETTask SetResult
         /// </summary>
         public static ETTask Create(bool fromPool = false)
         {

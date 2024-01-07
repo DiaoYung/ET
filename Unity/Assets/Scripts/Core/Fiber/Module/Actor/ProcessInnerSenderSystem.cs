@@ -173,7 +173,7 @@ namespace ET
                 bool needException = true
         )
         {
-            // 为请求分配一个RpcId
+            // 为请求分配一个RpcId （Remote Procedure Call ID）
             request.RpcId = self.GetRpcId();
 
             // 如果ActorId是默认值，抛出异常

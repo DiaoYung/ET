@@ -34,7 +34,7 @@ namespace ET.Client
         }
 
         // 使用指定的账号和密码进行登录，并返回玩家ID
-        public static async ETTask<long> LoginAsync(this ClientSenderCompnent self, string account, string password)
+        public static async ETTask<NetClient2Main_Login> LoginAsync(this ClientSenderCompnent self, string account, string password)
         {
             // 创建一个新的Fiber，并保存其ID
             self.fiberId = await FiberManager.Instance.Create(SchedulerType.ThreadPool, 0, SceneType.NetClient, "");
@@ -45,7 +45,7 @@ namespace ET.Client
             {
                 OwnerFiberId = self.Fiber().Id, Account = account, Password = password
             }) as NetClient2Main_Login;
-            return response.PlayerId;
+            return response;
         }
 
         public static void Send(this ClientSenderCompnent self, IMessage message)

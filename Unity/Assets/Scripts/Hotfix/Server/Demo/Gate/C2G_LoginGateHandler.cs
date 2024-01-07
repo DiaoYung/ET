@@ -17,6 +17,7 @@ namespace ET.Server
                 return;
             }
             
+            
             session.RemoveComponent<SessionAcceptTimeoutComponent>();
 
             PlayerComponent playerComponent = root.GetComponent<PlayerComponent>();
@@ -39,7 +40,7 @@ namespace ET.Server
             {
                 // 判断是否在战斗
                 PlayerRoomComponent playerRoomComponent = player.GetComponent<PlayerRoomComponent>();
-                if (playerRoomComponent.RoomActorId != default)
+                if (playerRoomComponent != null && playerRoomComponent.RoomActorId != default)
                 {
                     CheckRoom(player, session).Coroutine();
                 }
